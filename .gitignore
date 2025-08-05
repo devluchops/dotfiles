@@ -1,0 +1,68 @@
+# =============================================================================
+# DOTFILES GITIGNORE - Keep sensitive data safe
+# =============================================================================
+
+# Environment files with sensitive data
+.env.local
+.env.production
+.env.staging
+.env.*.local
+
+# Backup files
+*.backup
+*.backup.*
+.dotfiles_backup_*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# SSH keys (if accidentally placed here)
+id_rsa
+id_ed25519
+*.pem
+*.key
+
+# Local configuration overrides
+*.local
+.zshrc.local.backup
+
+# Node modules (if any)
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Logs
+*.log
+logs/
+
+# Personal notes
+notes.txt
+TODO.md
+PRIVATE.md
