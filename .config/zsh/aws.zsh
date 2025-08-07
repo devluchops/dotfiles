@@ -152,3 +152,175 @@ aws_account_info() {
         return 1
     fi
 }
+
+# =============================================================================
+# AWS VAULT FUNCTIONS - Secure credential management
+# =============================================================================
+
+# List aws-vault profiles
+awsv_list() {
+    echo "🔐 AWS Vault Profiles:"
+    echo "====================="
+    aws-vault list
+}
+
+# Execute command with aws-vault profile
+awsv_exec() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: awsv_exec <profile> [command]"
+        echo "Available profiles:"
+        awsv_list
+        return 1
+    fi
+    
+    local profile="$1"
+    shift
+    
+    if [[ $# -eq 0 ]]; then
+        # No command provided, start a shell
+        echo "🚀 Starting shell with profile: $profile"
+        aws-vault exec "$profile" -- zsh
+    else
+        # Execute the provided command
+        echo "🚀 Executing with profile: $profile"
+        aws-vault exec "$profile" -- "$@"
+    fi
+}
+
+# Login to aws-vault profile
+awsv_login() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: awsv_login <profile>"
+        echo "Available profiles:"
+        awsv_list
+        return 1
+    fi
+    
+    local profile="$1"
+    echo "🔐 Logging into aws-vault profile: $profile"
+    aws-vault login "$profile"
+}
+
+# Add new aws-vault profile
+awsv_add() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: awsv_add <profile>"
+        return 1
+    fi
+    
+    local profile="$1"
+    echo "➕ Adding aws-vault profile: $profile"
+    aws-vault add "$profile"
+}
+
+# Remove aws-vault profile
+awsv_remove() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: awsv_remove <profile>"
+        echo "Available profiles:"
+        awsv_list
+        return 1
+    fi
+    
+    local profile="$1"
+    echo "🗑️  Removing aws-vault profile: $profile"
+    aws-vault remove "$profile"
+}
+
+# Clear aws-vault sessions
+awsv_clear() {
+    echo "🧹 Clearing aws-vault sessions..."
+    aws-vault clear
+}
+
+# Get aws-vault version and status
+awsv_status() {
+    echo "📊 AWS Vault Status:"
+    echo "==================="
+    
+    if command -v aws-vault &> /dev/null; then
+        echo "✅ aws-vault is installed"
+        aws-vault --version
+        echo ""
+        awsv_list
+    else
+        echo "❌ aws-vault is not installed"
+        echo "💡 Install with: brew install aws-vault"
+    fi
+}
+
+# Interactive aws-vault profile selector
+awsv() {
+    if ! command -v aws-vault &> /dev/null; then
+        echo "❌ aws-vault is not installed"
+        echo "💡 Install with: brew install aws-vault"
+        return 1
+    fi
+
+    # Get available profiles
+    local profiles=($(aws-vault list --profiles 2>/dev/null))
+    
+    if [ ${#profiles[@]} -eq 0 ]; then
+        echo "❌ No aws-vault profiles found"
+        echo "💡 Add a profile with: awsv_add <profile>"
+        return 1
+    fi
+
+    # Add options to the profiles
+    profiles+=("Add new profile" "Clear sessions" "Quit")
+
+    echo "🔐 AWS Vault Manager"
+    echo "==================="
+    
+    PS3="Select an option: "
+    select option in "${profiles[@]}"; do
+        case $option in
+            "Add new profile")
+                read -p "Enter profile name: " profile_name
+                if [[ -n "$profile_name" ]]; then
+                    awsv_add "$profile_name"
+                fi
+                break
+                ;;
+            "Clear sessions")
+                awsv_clear
+                break
+                ;;
+            "Quit")
+                echo "👋 Exiting AWS Vault Manager"
+                break
+                ;;
+            "")
+                echo "❌ Invalid selection. Please try again."
+                ;;
+            *)
+                echo "🚀 Starting shell with profile: $option"
+                awsv_exec "$option"
+                break
+                ;;
+        esac
+    done
+}
+
+# Export credentials from aws-vault to environment
+awsv_export() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: awsv_export <profile>"
+        echo "Available profiles:"
+        awsv_list
+        return 1
+    fi
+    
+    local profile="$1"
+    echo "📤 Exporting credentials for profile: $profile"
+    
+    # Export credentials to current shell
+    eval "$(aws-vault exec "$profile" -- env | grep AWS_ | sed 's/^/export /')"
+    
+    if [[ $? -eq 0 ]]; then
+        echo "✅ Credentials exported to current shell"
+        aws_sts
+    else
+        echo "❌ Failed to export credentials"
+    fi
+}

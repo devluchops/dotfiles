@@ -211,8 +211,13 @@ main() {
     # Copy the zsh modules from .config/zsh to ~/.config/zsh
     if [[ -d "$DOTFILES_DIR/.config/zsh" ]]; then
         log_info "Copying zsh modules to ~/.config/zsh/"
-        mkdir -p "$HOME/.config"
-        copy_directory "$DOTFILES_DIR/.config/zsh" "$HOME/.config/zsh"
+        mkdir -p "$HOME/.config/zsh"
+        # Copy individual files to avoid nested directory structure
+        for file in "$DOTFILES_DIR/.config/zsh"/*; do
+            if [[ -f "$file" ]]; then
+                copy_file "$file" "$HOME/.config/zsh/$(basename "$file")"
+            fi
+        done
     fi
     
     # Copy .env.local to home directory if it doesn't exist there

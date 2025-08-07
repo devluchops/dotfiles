@@ -1,4 +1,4 @@
-# 🚀 Dotfiles - Luis Valencia
+# 🚀 Dotfiles - DevLuchOps
 
 Configuración modular y moderna para zsh con herramientas de productividad.
 

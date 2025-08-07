@@ -164,13 +164,16 @@ urldecode() {
 }
 
 # JSON pretty print
-jsonpp() {
+json_pretty() {
     if [[ -z "$1" ]]; then
         python3 -m json.tool
     else
         cat "$1" | python3 -m json.tool
     fi
 }
+
+# Alias for backward compatibility
+alias jsonpp='json_pretty'
 
 # Base64 encode
 b64encode() {

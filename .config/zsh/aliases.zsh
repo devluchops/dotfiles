@@ -108,7 +108,7 @@ alias tar='tar -zcvf'
 
 # Development
 alias serve8000='python3 -m http.server 8000'
-alias jsonpp='python3 -m json.tool'
+# JSON pretty print function is defined in functions.zsh
 
 # macOS specific
 if [[ "$OSTYPE" == "darwin"* ]]; then
