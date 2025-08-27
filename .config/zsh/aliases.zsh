@@ -73,6 +73,7 @@ alias dlogs='docker logs -f'
 
 # Kubernetes aliases
 alias k='kubectl'
+alias kgn='kubectl get nodes'
 alias kgp='kubectl get pods'
 alias kgs='kubectl get svc'
 alias kgd='kubectl get deployment'
