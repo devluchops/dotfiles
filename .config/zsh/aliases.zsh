@@ -132,3 +132,9 @@ alias reload='source ~/.zshrc'
 # Personal shortcuts
 alias g='git'
 alias activate_venv='source /Users/luisvalencia/.venv/bin/activate'
+
+# GitHub shortcuts
+alias github_optimum='open https://github.com/orgs/optimum-vector-group/repositories'
+alias github_devluchops='open "https://github.com/devluchops?tab=repositories"'
+alias jira_optimum='open https://optimum-vector-group.atlassian.net/jira/software/c/projects/CD/boards/68'
+alias confluence_optimum='open https://optimum-vector-group.atlassian.net/wiki/home'

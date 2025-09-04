@@ -185,6 +185,7 @@ main() {
     mkdir -p "$HOME/.config/nvim"
     mkdir -p "$HOME/.config/tmux"
     mkdir -p "$HOME/.config/ghostty"
+    mkdir -p "$HOME/.scripts/python"
     
     # Create symlinks for dotfiles
     log_step "Copying configuration files..."
@@ -237,6 +238,13 @@ main() {
     
     if [[ -d "$DOTFILES_DIR/.config/ghostty" ]]; then
         copy_directory "$DOTFILES_DIR/.config/ghostty" "$HOME/.config/ghostty"
+    fi
+    
+    # Copy scripts directory if it exists
+    if [[ -d "$DOTFILES_DIR/.scripts" ]]; then
+        copy_directory "$DOTFILES_DIR/.scripts" "$HOME/.scripts"
+        log_info "Making Python scripts executable..."
+        chmod +x "$HOME/.scripts/python"/*.py 2>/dev/null || true
     fi
     
     # Check for recommended tools

@@ -96,7 +96,7 @@ aws_configure() {
 # List all AWS profiles with colors
 aws_list_profiles() {
     echo -e "${aws_cyan}Available AWS profiles:${aws_nc}"
-    aws configure list-profiles | sed "s/^/  ${aws_yellow}- /" | sed "s/\$/${aws_nc}/"
+    aws configure list-profiles | sort | sed "s/^/  ${aws_yellow}- /" | sed "s/\$/${aws_nc}/"
 }
 
 # Enhanced AWS SSO login with better error handling and color support
@@ -179,6 +179,10 @@ aws_sso_login() {
     echo -e "${aws_blue}🔐 AWS SSO Login${aws_nc}"
     echo -e "${aws_blue}===============${aws_nc}"
     echo ""
+    
+    # Sort profiles alphabetically
+    IFS=$'\n' profiles=($(sort <<<"${profiles[*]}"))
+    unset IFS
     
     # Display profiles manually for better control
     echo -e "${aws_cyan}Available SSO profiles:${aws_nc}"
@@ -338,6 +342,10 @@ aws_login() {
     echo -e "${aws_blue}=======================${aws_nc}"
     echo ""
     
+    # Sort profiles alphabetically
+    IFS=$'\n' profiles=($(sort <<<"${profiles[*]}"))
+    unset IFS
+    
     # Display profiles manually for better control
     echo -e "${aws_cyan}Available traditional profiles:${aws_nc}"
     for profile in "${profiles[@]}"; do
@@ -475,8 +483,8 @@ aws_profile_manager() {
     echo -e "${aws_blue}======================${aws_nc}"
     echo ""
     
-    # Get all profiles
-    local all_profiles=($(aws configure list-profiles 2>/dev/null))
+    # Get all profiles and sort them
+    local all_profiles=($(aws configure list-profiles 2>/dev/null | sort))
     
     if [ ${#all_profiles[@]} -eq 0 ]; then
         echo -e "${aws_red}❌ No AWS profiles found${aws_nc}"
@@ -644,4 +652,12 @@ aws_account_info() {
         return 1
     fi
 }
+
+# =============================================================================
+# AWS ROUTE53 ALIASES - DNS management tools
+# =============================================================================
+
+# AWS Route53 DNS management
+alias aws-route53-add-cname='$HOME/Git/dotfiles/.scripts/python/aws-route53-add-cname.py'
+alias aws-route53-add-ns='$HOME/Git/dotfiles/.scripts/python/aws-route53-add-ns.py'
 
