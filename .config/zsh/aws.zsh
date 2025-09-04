@@ -654,10 +654,13 @@ aws_account_info() {
 }
 
 # =============================================================================
-# AWS ROUTE53 ALIASES - DNS management tools
+# AWS SCRIPT ALIASES - Management tools
 # =============================================================================
 
+# AWS IAM management
+alias aws-iam-create-user='$HOME/.scripts/python/aws-iam-create-user.py'
+
 # AWS Route53 DNS management
-alias aws-route53-add-cname='$HOME/Git/dotfiles/.scripts/python/aws-route53-add-cname.py'
-alias aws-route53-add-ns='$HOME/Git/dotfiles/.scripts/python/aws-route53-add-ns.py'
+alias aws-route53-add-cname='$HOME/.scripts/python/aws-route53-add-cname.py'
+alias aws-route53-add-ns='$HOME/.scripts/python/aws-route53-add-ns.py'
 
